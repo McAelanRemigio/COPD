@@ -17,3 +17,8 @@ FEV1_FVC_ratio is the ratio between FEV1 and FVC (smaller  ⇒  worse disease)
 FEV1_phase2 is the FEV1 of research participants 5 years later
 
 I did this project to analyze the relationship between FEV1 at follow-up FEV1_phase2 and other variables in the dataset. 
+
+## ⚠️ **Data Privacy Notice**  
+- This repository does **not** contain any actual student data.  
+- All datasets used are kept private and are **not included in this repository**.  
+- Example or synthetic datasets may be used for demonstration purposes.  
