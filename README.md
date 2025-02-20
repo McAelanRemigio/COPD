@@ -1,7 +1,7 @@
 # COPD
 Chronic Obstructive Pulmonary Disease Project
 
-Data is from COPDGene Website -> https://colab.research.google.com/drive/1kw6it2J1LoQQ-zhdW9NcgV7Yx7dJTq7q#scrollTo=hVSLQqLnfUUD
+Data is from COPDGene Website -> [https://copdgene.org/]
 
 Chronic obstructive pulmonary disease (COPD) affects over 16 million Americans and is the fourth leading cause of death in the United States behind heart disease, cancer, and accidental death. While COPD can result from various toxic inhalations or asthma, it is most commonly associated with cigarette smoking.
 
