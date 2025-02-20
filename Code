@@ -135,3 +135,83 @@ summary(fit1)
 summary(fit2)
 confint(fit1)
 confint(fit2)
+
+# lung capacity vs FEV1_phase2 has weak positive linear correlation, little to no correlation
+# pct_gas_trapping has a moderate negative linear correlation.
+
+# Using Regression Model From total_lung_capacity, FEV1_phase2, and pct_gastrapping
+# also calculate root mean squared error to view model's predictions matching actual values
+
+y = dat1$FEV1_phase2
+y_predicted1 = fitted(lm(y ~ pct_emphysema, data = dat1))
+y_predicted2 = fitted(lm(y ~ pct_gastrapping, data = dat1))
+y_predicted3 = fitted(lm(y ~ total_lung_capacity, data = dat1))
+
+rmse1 = sqrt(mean((y - y_predicted1)^2))
+rmse1
+
+rmse2 = sqrt(mean((y - y_predicted2)^2))
+rmse2
+
+rmse3 = sqrt(mean((y - y_predicted3)^2))
+rmse3
+
+install.packages("randomForest")
+library(randomForest)
+
+# Statistical/Machine Learning Random Foresting
+
+samp = sample(1:nrow(dat1), 3000)
+train = dat1[samp, ]
+
+valid = dat1[-samp, ]
+
+mse = function(true, pred){
+  return(mean((true - pred)^2))
+}
+
+
+
+fit = randomForest(FEV1_phase2 ~ FEV1 +
+  FVC +
+  FEV1_FVC_ratio +
+  copd + pct_gastrapping +
+  height_cm +
+  exp_meanatt +
+  gender +
+  pct_emphysema +
+  total_lung_capacity +
+  insp_meanatt +
+  visit_age +
+  Duration_Smoking, data = train[,-(1:3)],
+                    importance = TRUE,
+
+                    # hyperparameters (change to improve predictions)
+                    ntree    = 10000,  # number of trees (more trees, better accuracy)
+                    mtry     = 5,   # number of variables (based on running this forest the first time, terms = FEV1_phase2 ~ sid + visit_year + visit_date + visit_age + gender + race + height_cm + .     weight_kg + sysBP + diasBP + hr + O2_hours_day + bmi + asthma + .     hay_fever + bronchitis_attack + pneumonia + chronic_bronchitis + .     emphysema + copd + sleep_apnea + SmokStartAge + CigPerDaySmokAvg + .     Duration_Smoking + smoking_status + total_lung_capacity + .     pct_emphysema + functional_residual_capacity + pct_gastrapping + .     insp_meanatt + exp_meanatt + FEV1_FVC_ratio + FEV1 + FVC)))
+                    nodesize = 5,    # size of nodes
+                    maxnodes = 2000, # maximum number of nodes
+                    )
+
+                    fit
+
+mse(valid$FEV1_phase2, predict(fit, newdata = valid))
+sqrt(mse(valid$FEV1_phase2, predict(fit, newdata = valid)))
+
+predict(fit, newdata = train)
+print("MSE TRAIN SET")
+mse(train$FEV1_phase2, predict(fit, newdata = train))
+print("RMSE TRAIN SET")
+sqrt(mse(train$FEV1_phase2, predict(fit, newdata = train)))
+
+predict(fit, newdata = valid)
+print("MSE VALID SET")
+mse(valid$FEV1_phase2, predict(fit, newdata = valid))
+print("RMSE VALID SET")
+sqrt(mse(valid$FEV1_phase2, predict(fit, newdata = valid)))
+
+FEV1_phase2_predictions = predict(fit, newdata = dat2)
+
+preds = data.frame(sid = dat2$sid, FEV1_phase2_predictions)
+preds
+write.csv(valid, 'copd_predictions.csv')
