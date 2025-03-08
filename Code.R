@@ -1,7 +1,7 @@
 # Loading and Removing NA
 copd = read.csv("copd_data_project.csv")
 head(copd)
-
+ 
 dat1 = na.omit(copd)
 nrow(dat1)
 
